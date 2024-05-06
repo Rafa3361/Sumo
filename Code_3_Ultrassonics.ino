@@ -35,8 +35,9 @@ void setup () {
   analogWrite(motordirtras, 0);
 
   Serial.begin(9600);  //Inicializa a porta serial do Arduino com 9600 de baud rate
-
 }
+
+bool justiceiroAtivo = false;
 
 void loop () {
   while(true){
@@ -66,21 +67,26 @@ void loop () {
     // Serial.println(distRight);
     // delay(600);
 
-    if (distFront > 20){
-      Serial.println("Seguindo em frente");
-      analogWrite(motoresq, vel);
-      analogWrite(motordir, vel);
-    } 
-    if (distFront < 20) {
-      Serial.println("Achei!");
-      //justiceiro(); // Tarefa de loop para seguir o adversário
-      analogWrite(motoresq, 1);
-      analogWrite(motordir, 1);
+    if (!justiceiroAtivo){
+      if (distFront > 10){
+        Serial.print("Seguindo em frente");
+        Serial.println(distFront);
+        analogWrite(motoresq, vel);
+        analogWrite(motordir, vel);
+      } 
+      if (distFront > 2 && distFront < 10) {
+        Serial.print("Achei!");
+        Serial.println(distFront);
+        analogWrite(motoresq, 1);
+        analogWrite(motordir, 1);
+        justiceiro(); // Tarefa de loop para seguir o adversário
+      }
     }
   }
 }
 
 
 void justiceiro () {
+  justiceiroAtivo = true;
   Serial.println("Partiu!");
 }
